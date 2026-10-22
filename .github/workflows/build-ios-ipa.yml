@@ -1,0 +1,60 @@
+name: Build iOS IPA (Standalone)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    name: iOS .ipa Derle (macOS Runner)
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: Repo kodunu indir
+        uses: actions/checkout@v4
+
+      - name: Node.js kurulumu
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Bağımlılıkları yükle
+        run: npm ci
+
+      - name: Native iOS (Xcode) projesini oluştur
+        env:
+          CI: "1"
+        run: npx expo prebuild --platform ios --clean
+
+      - name: Release iOS uygulamasını derle (İmzasız .app)
+        run: |
+          WORKSPACE=$(ls -d ios/*.xcworkspace | head -n 1)
+          SCHEME=$(basename "$WORKSPACE" .xcworkspace)
+          echo "Using workspace: $WORKSPACE | scheme: $SCHEME"
+          xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath ios/build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: .ipa paketini oluştur (Sideloadly / AltStore / SideStore uyumlu)
+        run: |
+          rm -rf Payload VestelTVKumanda-iOS.ipa
+          mkdir -p Payload
+          cp -R ios/build/Build/Products/Release-iphoneos/*.app Payload/
+          zip -qry VestelTVKumanda-iOS.ipa Payload
+
+      - name: VestelTVKumanda-iOS.ipa dosyasını yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: VestelTVKumanda-iOS-IPA
+          path: mobile/VestelTVKumanda-iOS.ipa
+          retention-days: 30

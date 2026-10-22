@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "Vestel TV Kumanda",
+    "slug": "vestel-smart-tv-remote",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0B0D12",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0D12"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vesteltv.remotecontroller",
+      "infoPlist": {
+        "NSLocalNetworkUsageDescription": "Vestel Smart TV'nizi aynı Wi-Fi ağı üzerinde bulmak ve uzaktan kumanda komutlarını doğrudan telefonunuzdan göndermek için yerel ağ erişimine izin verin.",
+        "NSBonjourServices": [
+          "_dial-multiscreen-org._tcp",
+          "_http._tcp"
+        ],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.vesteltv.remotecontroller",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B0D12",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "Vestel Smart TV Kumanda",
+      "shortName": "Vestel TV",
+      "backgroundColor": "#0B0D12",
+      "themeColor": "#0B0D12"
+    }
+  }
+}
